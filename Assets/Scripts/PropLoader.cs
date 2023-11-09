@@ -19,14 +19,14 @@ public class PropLoader : MonoBehaviour
     // A primitive shape (sphere, cube, etc). The kind of primitive
     // is represented by 'type', and its location is found in 'Transform'.
     //
-    // TODO:
-    //   - Change int type to some kind of enum.
-    //   - Add some way of changing the texture / base colour of the
-    //     primitive.
-    //
     [System.Serializable]
     public class Primitive
     {
+        // TODO:
+        //   - Change int type to some kind of enum.
+        //   - Add some way of changing the texture / base colour of the
+        //     primitive.
+        //     
         public int type;
         public PrimitiveTransform transform;
     }
@@ -34,27 +34,30 @@ public class PropLoader : MonoBehaviour
     // A prop. A collection of primitive shapes that can look like
     // fences, signs, walls, doors, windows, etc.
     //
-    // TODO:
-    //   - Add prop thumbnail field.
-    //   - add prop type field. (The type would change the placement
-    //     behaviour of the prop. Signs and paintings go on walls, etc.)
-    //
     [System.Serializable]
     public class Prop
     {
+        // TODO:
+        //   - Add prop thumbnail field.
+        //   - add prop type field. (The type would change the placement
+        //     behaviour of the prop. Signs and paintings go on walls, etc.)
+        //
         public string name;
         public Primitive[] primitives;
     }
 
-    public List<Prop> props;
+    public List<Prop> props; // Our list of available props.
 
     // Awake is called before start, as early as possible.
     // Allows prop list to be read on 'Start()'.
     //
     private void Awake()
     {
-        // TODO: Maybe asynchronously load props? Depends on
-        //       number of props, and how long loading takes.
+        // TODO:
+        //   - Add schema verification for all JSON read.
+        //     Will ensure no bad data is loaded.
+        //   - Maybe asynchronously load props? Depends on
+        //     number of props, and how long loading takes.
         try
         {
             IEnumerable<string> files = Directory.EnumerateFiles(
