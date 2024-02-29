@@ -25,7 +25,8 @@ public class Primitive
     //   - Add some way of changing the texture / base colour of the
     //     primitive.
     //     
-    public int type;
+    public string type;
+    public Color colour;
     public PrimitiveTransform transform;
 }
 

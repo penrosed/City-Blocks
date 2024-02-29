@@ -2,7 +2,7 @@
   "name": "Fence",
   "primitives": [
     {
-      "type": 0,
+      "type": "Sphere",
       "transform": {
         "position": {
           "x": 0.0,
@@ -22,7 +22,7 @@
       }
     },
     {
-      "type": 1,
+      "type": "Cube",
       "transform": {
         "position": {
           "x": 0,
