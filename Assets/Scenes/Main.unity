@@ -430,6 +430,12 @@ MonoBehaviour:
     Object: {fileID: 5657909092103279851, guid: d54e5386bfc4e574eb4d662fabdbe297, type: 3}
   - Name: Cylinder
     Object: {fileID: 5657909092103279851, guid: d54e5386bfc4e574eb4d662fabdbe297, type: 3}
+  - Name: Cone
+    Object: {fileID: 2169569107306567717, guid: 82115ca61e4b7af48b721bded7bad006, type: 3}
+  - Name: Pyramid
+    Object: {fileID: 2216256215688456873, guid: 0c924fd881cdd7443adfed2011bfa3c5, type: 3}
+  - Name: Tri Prism
+    Object: {fileID: 9114904847883259885, guid: da3a66f1879b72640914ec592d052616, type: 3}
 --- !u!4 &1773346704
 Transform:
   m_ObjectHideFlags: 0
