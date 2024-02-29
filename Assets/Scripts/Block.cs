@@ -60,6 +60,9 @@ public class Block : MonoBehaviour
         //   - Outsource primitive instantiation to a separate
         //     Factory object. Would allow the queueing of
         //     Instantiation, possibly saving performance.
+        //   - Build an instance of each prop of the palette
+        //     in memory, then duplicate it where needed.
+        //     Would save building it from scratch each time.
         //
         // Go through each instantiated prop in our layout...
         foreach (PropInstance i in layout)
