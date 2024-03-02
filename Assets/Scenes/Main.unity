@@ -375,8 +375,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8f6c68d16ad6d440b980677a2286c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _JSONFile: {fileID: 0}
-  JSON: {fileID: 0}
+  _JSONFile: {fileID: 102900000, guid: c7f5eb2f28e732047a6996cef864d37c, type: 3}
+  JSON: {fileID: 1708978733}
   title: 
   creator: 
   palette: []
@@ -396,6 +396,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!49 &1708978733
+TextAsset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Script: "{\r\n  \"title\": \"Caf\xE9\",\r\n  \"creator\": \"Daniel Penrose\",\r\n 
+    \"palette\": [\r\n    {\r\n      \"name\": \"Fence\",\r\n      \"primitives\":
+    [\r\n        {\r\n          \"type\": \"Sphere\",\r\n          \"colour\": {\r\n           
+    \"r\": 0.4056604,\r\n            \"g\": 0.1781202,\r\n            \"b\": 0.07807048,\r\n           
+    \"a\": 1.0\r\n          },\r\n          \"transform\": {\r\n            \"position\":
+    {\r\n              \"x\": 0.0,\r\n              \"y\": 0.0,\r\n             
+    \"z\": 0.0\r\n            },\r\n            \"rotation\": {\r\n             
+    \"x\": 0.0,\r\n              \"y\": 0.0,\r\n              \"z\": 0.0\r\n           
+    },\r\n            \"scale\": {\r\n              \"x\": 1.0,\r\n             
+    \"y\": 1.0,\r\n              \"z\": 1.0\r\n            }\r\n          }\r\n       
+    },\r\n        {\r\n          \"type\": \"Cube\",\r\n          \"transform\":
+    {\r\n            \"position\": {\r\n              \"x\": 0,\r\n             
+    \"y\": 0.5,\r\n              \"z\": 0\r\n            },\r\n            \"rotation\":
+    {\r\n              \"x\": 0,\r\n              \"y\": 45,\r\n              \"z\":
+    0\r\n            },\r\n            \"scale\": {\r\n              \"x\": 1,\r\n             
+    \"y\": 1,\r\n              \"z\": 1\r\n            }\r\n          }\r\n       
+    },\r\n        {\r\n          \"type\": \"Subtract\"\r\n        }\r\n      ]\r\n   
+    }\r\n  ],\r\n  \"layout\": [\r\n    {\r\n      \"index\": 0,\r\n      \"transform\":
+    {\r\n        \"position\": {\r\n          \"x\": 0.0,\r\n          \"y\": 2.0,\r\n         
+    \"z\": 0.0\r\n        },\r\n        \"rotation\": {\r\n          \"x\": 0.0,\r\n         
+    \"y\": 0.0,\r\n          \"z\": 0.0\r\n        },\r\n        \"scale\": {\r\n         
+    \"x\": 1.0,\r\n          \"y\": 1.0,\r\n          \"z\": 1.0\r\n        }\r\n     
+    }\r\n    },\r\n    {\r\n      \"index\": 0,\r\n      \"transform\": {\r\n       
+    \"position\": {\r\n          \"x\": 2.0,\r\n          \"y\": 2.0,\r\n         
+    \"z\": 0.0\r\n        },\r\n        \"rotation\": {\r\n          \"x\": 0.0,\r\n         
+    \"y\": 0.0,\r\n          \"z\": 0.0\r\n        },\r\n        \"scale\": {\r\n         
+    \"x\": 1.0,\r\n          \"y\": 1.0,\r\n          \"z\": 1.0\r\n        }\r\n     
+    }\r\n    }\r\n  ]\r\n}"
 --- !u!1 &1773346702
 GameObject:
   m_ObjectHideFlags: 0
