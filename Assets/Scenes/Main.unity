@@ -339,7 +339,7 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!49 &950300074
+--- !u!49 &733027816
 TextAsset:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -495,11 +495,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _JSONFile: {fileID: 102900000, guid: 20dace53b98f4ac42a7d44d3d7c7607a, type: 3}
-  JSON: {fileID: 950300074}
-  title: 
-  creator: 
-  palette: []
-  layout: []
+  JSON: {fileID: 733027816}
+  block:
+    title: 
+    creator: 
+    palette: []
+    layout: []
 --- !u!4 &1275097599
 Transform:
   m_ObjectHideFlags: 0
