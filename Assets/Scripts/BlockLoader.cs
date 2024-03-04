@@ -16,12 +16,14 @@ public struct PropInstance
 //   - Constructed from a palette of props (see 'Prop.cs').
 //   - These props are placed within the block by referencing
 //     their index & specifiying a transform (x,y,z, etc.)
+// TODO:
+//   - Reintroduce string fields as a FixedString32
 //
 [System.Serializable]
 public struct Block
 {
-    [HideInInspector] public string title;
-    public string creator;
+    // [HideInInspector] public string title;
+    // public string creator;
     public Prop[] palette;
     public PropInstance[] layout;
 }
@@ -62,7 +64,7 @@ public class BlockLoader : MonoBehaviour
         }
 
         // Set the Block Object's name to the title specified in JSON.
-        this.name = block.title.ToString();
+        // this.name = block.title.ToString();
 
         // TODO:
         //   - Outsource primitive instantiation to a separate
@@ -76,7 +78,7 @@ public class BlockLoader : MonoBehaviour
         foreach (PropInstance i in block.layout)
         {
             // Create the parent object with the relevant position, etc.
-            GameObject prop = new GameObject(block.palette[i.index].name);
+            GameObject prop = new GameObject();
             prop.transform.parent = this.transform;
             prop.transform.localPosition = i.transform.position;
             prop.transform.localRotation = Quaternion.Euler(i.transform.rotation);

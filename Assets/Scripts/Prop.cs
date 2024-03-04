@@ -25,7 +25,7 @@ public struct Primitive
     //   - Add some way of changing the texture / base colour of the
     //     primitive.
     //     
-    public string type;
+    public int type;
     public Color colour;
     public PrimitiveTransform transform;
 }
@@ -40,7 +40,8 @@ public struct Prop
     //   - Add prop thumbnail field.
     //   - add prop type field. (The type would change the placement
     //     behaviour of the prop. Signs and paintings go on walls, etc.)
+    //   - Reintroduce string fields as a FixedString32
     //
-    public string name;
+    // public string name;
     public Primitive[] primitives;
 }

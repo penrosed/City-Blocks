@@ -1,12 +1,9 @@
 ﻿{
-  "title": "Café",
-  "creator": "Daniel Penrose",
   "palette": [
     {
-      "name": "Fence",
       "primitives": [
         {
-          "type": "Sphere",
+          "type": 1,
           "colour": {
             "r": 0.4056604,
             "g": 0.1781202,
@@ -32,7 +29,7 @@
           }
         },
         {
-          "type": "Cube",
+          "type": 0,
           "transform": {
             "position": {
               "x": 0,
