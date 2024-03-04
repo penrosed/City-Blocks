@@ -7,7 +7,7 @@ using UnityEngine;
 // serialise transform data, I've had to write my own class.
 //
 [System.Serializable]
-public class PrimitiveTransform
+public struct PrimitiveTransform
 {
     public Vector3 position;
     public Vector3 rotation;
@@ -18,7 +18,7 @@ public class PrimitiveTransform
 // is represented by 'type', and its location is found in 'Transform'.
 //
 [System.Serializable]
-public class Primitive
+public struct Primitive
 {
     // TODO:
     //   - Change int type to some kind of enum.
@@ -34,7 +34,7 @@ public class Primitive
 // fences, signs, walls, doors, windows, etc.
 //
 [System.Serializable]
-public class Prop
+public struct Prop
 {
     // TODO:
     //   - Add prop thumbnail field.
