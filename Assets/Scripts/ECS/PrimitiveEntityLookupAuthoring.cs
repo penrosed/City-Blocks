@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
 
 public class PrimitiveEntityLookupAuthoring : MonoBehaviour
@@ -14,27 +15,26 @@ public class PrimitiveEntityLookupAuthoring : MonoBehaviour
         {
             Entity entity = GetEntity(TransformUsageFlags.None);
 
-            var buffer = AddBuffer<PrimitiveBufferElement>(entity);
+            var buffer = AddBuffer<PrimitivePrefab>(entity);
             foreach (GameObject go in authoring.primitives)
             {
-                buffer.Add(GetEntity(go, TransformUsageFlags.None));
+                buffer.Add(GetEntity(go, TransformUsageFlags.Renderable & TransformUsageFlags.NonUniformScale));
             }
         }
     }
 }
 
-[InternalBufferCapacity(8)]
-public struct PrimitiveBufferElement : IBufferElementData
+public struct PrimitivePrefab : IBufferElementData
 {
-    public Entity primitive;
+    public Entity primitivePrefab;
 
-    public static implicit operator PrimitiveBufferElement(Entity primitive)
+    public static implicit operator PrimitivePrefab(Entity primitivePrefab)
     {
-        return new PrimitiveBufferElement { primitive = primitive };
+        return new PrimitivePrefab { primitivePrefab = primitivePrefab };
     }
 
-    public static implicit operator Entity(PrimitiveBufferElement element)
+    public static implicit operator Entity(PrimitivePrefab element)
     {
-        return element.primitive;
+        return element.primitivePrefab;
     }
 }

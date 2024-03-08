@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
 // A simple transform class. Unity's built-in Transforms
@@ -18,7 +19,7 @@ public struct PrimitiveTransform
 // is represented by 'type', and its location is found in 'Transform'.
 //
 [System.Serializable]
-public struct Primitive
+public struct Primitive : IBufferElementData
 {
     // TODO:
     //   - Change int type to some kind of enum.
@@ -42,6 +43,6 @@ public struct Prop
     //     behaviour of the prop. Signs and paintings go on walls, etc.)
     //   - Reintroduce string fields as a FixedString32
     //
-    // public string name;
+    public string name;
     public Primitive[] primitives;
 }

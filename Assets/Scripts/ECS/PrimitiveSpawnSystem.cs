@@ -10,13 +10,13 @@ public partial struct PrimitiveSpawnSystem : ISystem
 {
     void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<PrimitiveBufferElement>();
+        state.RequireForUpdate<PrimitivePrefab>();
     }
 
     void OnUpdate(ref SystemState state) 
     {
         state.Enabled = false;
-        var primitiveBuffer = SystemAPI.GetSingletonBuffer<PrimitiveBufferElement>(true);
+        var primitiveBuffer = SystemAPI.GetSingletonBuffer<PrimitivePrefab>(true);
 
         var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         var newEntity = entityManager.Instantiate(primitiveBuffer[0]);

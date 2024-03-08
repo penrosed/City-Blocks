@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
+using Unity.Entities;
+using Unity.Collections;
+using System;
+using Unity.Transforms;
 
 [System.Serializable]
-public struct PropInstance
+public struct PropInstance : IBufferElementData
 {
     // The palette index of the prop we want to instanciate.
     public int index;
@@ -22,7 +26,7 @@ public struct PropInstance
 [System.Serializable]
 public struct Block
 {
-    // [HideInInspector] public string title;
+    public string name;
     // public string creator;
     public Prop[] palette;
     public PropInstance[] layout;
@@ -38,72 +42,21 @@ public class BlockLoader : MonoBehaviour
     // Cram JSON data into the block manually in the Unity Inspector.
     // (Will not be in final builds, due to #if UNITY_EDITOR)
 #if UNITY_EDITOR
-    [SerializeField] private Object _JSONFile;
-    private Object _JSONFile_OLD;
+    [SerializeField] private UnityEngine.Object _JSONFile;
+    private UnityEngine.Object _JSONFile_OLD;
+    private TextAsset JSON;
 #endif
 
-    // Member variables!
-    [HideInInspector] public TextAsset JSON;
+    private World world;
     public Block block;
 
     private void Awake()
     {
-        // TODO:
-        //   - Add schema verification for all JSON read.
-        //     Will ensure no bad data is loaded.
-        //   - Maybe asynchronously load props? Depends on
-        //     number of props, and how long loading takes.
-        try
-        {
-            // Populate this class with our JSON text!
-            this.block = JsonUtility.FromJson<Block>(JSON.text);
-        }
-        catch (IOException e)
-        {
-            Debug.LogError("Encountered an error while loading block:\n" + e);
-        }
+        world = World.DefaultGameObjectInjectionWorld;
 
-        // Set the Block Object's name to the title specified in JSON.
-        // this.name = block.title.ToString();
-
-        // TODO:
-        //   - Outsource primitive instantiation to a separate
-        //     Factory object. Would allow the queueing of
-        //     Instantiation, possibly saving performance.
-        //   - Build an instance of each prop of the palette
-        //     in memory, then duplicate it where needed.
-        //     Would save building it from scratch each time.
-        //
-        // Go through each instantiated prop in our layout...
-        foreach (PropInstance i in block.layout)
-        {
-            // Create the parent object with the relevant position, etc.
-            GameObject prop = new GameObject();
-            prop.transform.parent = this.transform;
-            prop.transform.localPosition = i.transform.position;
-            prop.transform.localRotation = Quaternion.Euler(i.transform.rotation);
-            prop.transform.localScale = i.transform.scale;
-
-            // For each primitive within the prop...
-            foreach (Primitive p in block.palette[i.index].primitives)
-            {
-                // Instantiate that primitive & parent it to the prop.
-                GameObject primitiveReference = (GameObject)Instantiate(
-                    PrimitiveLookup.primitives[p.type], prop.transform, false
-                );
-                primitiveReference.transform.localPosition = p.transform.position;
-                primitiveReference.transform.localRotation = Quaternion.Euler(p.transform.rotation);
-                primitiveReference.transform.localScale = p.transform.scale;
-
-                // Apply the colour property to the material of the prop.
-                // Each prop has it's own LODGroup, for performance.
-                foreach (LOD lod in primitiveReference.GetComponent<LODGroup>().GetLODs())
-                {
-                    // Assumes one renderer per LOD.
-                    lod.renderers[0].material.color = p.colour;
-                }
-            }
-        }
+#if UNITY_EDITOR
+        CreateBlock(JSON, Vector3.zero);
+#endif
     }
 
 #if UNITY_EDITOR
@@ -127,4 +80,80 @@ public class BlockLoader : MonoBehaviour
         }
     }
 #endif
+
+    public void CreateBlock(TextAsset blockJSON, Vector3 position)
+    {
+        // TODO:
+        //   - Add schema verification for all JSON read.
+        //     Will ensure no bad data is loaded.
+        try
+        {
+            // Populate a Block struct from our JSON!
+            block = JsonUtility.FromJson<Block>(blockJSON.text);
+
+            if (world.IsCreated)
+            {
+                // Create our EntityCommandBuffer to queue up our EntityManager commands.
+                EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
+
+                // Set up our block Entity.
+                Entity blockEnt = ecb.CreateEntity();
+                ecb.AddComponent<LocalTransform>(blockEnt, new LocalTransform
+                {
+                    Position = position,
+                    Scale = 1f,
+                    Rotation = Unity.Mathematics.quaternion.identity,
+                });
+                ecb.AddComponent<LocalToWorld>(blockEnt, new LocalToWorld { Value = Unity.Mathematics.float4x4.identity });
+                ecb.SetName(blockEnt, block.name);
+                ecb.AddBuffer<PropPalette>(blockEnt);
+
+#if UNITY_EDITOR
+                // Create a blank entity to parent our palette entities to, for organisation.
+                Entity paletteFolderEnt = ecb.CreateEntity();
+                ecb.SetName(paletteFolderEnt, "palette");
+                ecb.AddComponent<LocalToWorld>(paletteFolderEnt);
+                ecb.AddComponent<Parent>(paletteFolderEnt, new Parent { Value = blockEnt });
+#endif
+
+                // Set up our palette data. One entity per prop.
+                foreach (Prop p in block.palette)
+                {
+                    Entity propDataEnt = ecb.CreateEntity();
+                    ecb.SetName(propDataEnt, p.name);
+#if UNITY_EDITOR
+                    ecb.AddComponent<LocalToWorld>(propDataEnt);
+                    ecb.AddComponent<Parent>(propDataEnt, new Parent { Value = paletteFolderEnt });
+#endif
+                    ecb.AddBuffer<Primitive>(propDataEnt).AddRange(new NativeArray<Primitive>(p.primitives, Allocator.Temp));
+                    ecb.AppendToBuffer<PropPalette>(blockEnt, propDataEnt);
+                }
+
+                // Set up our layout buffer.
+                ecb.AddBuffer<PropInstance>(blockEnt).AddRange(new NativeArray<PropInstance>(block.layout, Allocator.Temp));
+
+                // Play back our EM commands.
+                ecb.Playback(world.EntityManager);
+            }
+        }   
+        catch (Exception e)
+        {
+            Debug.LogError("Encountered an error while loading block:\n" + e);
+        }
+    }
+}
+
+public struct PropPalette : IBufferElementData
+{
+    public Entity propData;
+
+    public static implicit operator PropPalette(Entity propData)
+    {
+        return new PropPalette { propData = propData };
+    }
+
+    public static implicit operator Entity(PropPalette element)
+    {
+        return element.propData;
+    }
 }

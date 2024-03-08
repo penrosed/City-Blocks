@@ -1,6 +1,8 @@
 ﻿{
+  "name": "Café",
   "palette": [
     {
+      "name": "Fence",
       "primitives": [
         {
           "type": 1,
