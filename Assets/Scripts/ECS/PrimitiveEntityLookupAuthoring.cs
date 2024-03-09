@@ -18,8 +18,7 @@ public class PrimitiveEntityLookupAuthoring : MonoBehaviour
             var buffer = AddBuffer<PrimitivePrefab>(entity);
             foreach (GameObject go in authoring.primitives)
             {
-                var primPrefab = GetEntity(go, TransformUsageFlags.Renderable & TransformUsageFlags.NonUniformScale);
-                buffer.Add(primPrefab);
+                buffer.Add(GetEntity(go, TransformUsageFlags.Renderable & TransformUsageFlags.NonUniformScale));
             }
         }
     }
