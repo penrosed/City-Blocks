@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 // A simple transform class. Unity's built-in Transforms
@@ -10,9 +11,9 @@ using UnityEngine;
 [System.Serializable]
 public struct PrimitiveTransform
 {
-    public Vector3 position;
-    public Vector3 rotation;
-    public Vector3 scale;
+    public float3 position;
+    public float3 rotation;
+    public float3 scale;
 }
 
 // A primitive shape (sphere, cube, etc). The kind of primitive
