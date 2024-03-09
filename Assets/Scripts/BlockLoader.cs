@@ -98,22 +98,22 @@ public class BlockLoader : MonoBehaviour
 
                 // Set up our block Entity.
                 Entity blockEnt = ecb.CreateEntity();
-                ecb.AddComponent<LocalTransform>(blockEnt, new LocalTransform
+                ecb.AddComponent(blockEnt, new LocalTransform
                 {
                     Position = position,
                     Scale = 1f,
                     Rotation = Unity.Mathematics.quaternion.identity,
                 });
-                ecb.AddComponent<LocalToWorld>(blockEnt, new LocalToWorld { Value = Unity.Mathematics.float4x4.identity });
+                ecb.AddComponent(blockEnt, new LocalToWorld { Value = Unity.Mathematics.float4x4.identity });
                 ecb.SetName(blockEnt, block.name);
                 ecb.AddBuffer<PropPalette>(blockEnt);
 
 #if UNITY_EDITOR
-                // Create a blank entity to parent our palette entities to, for organisation.
+                // Create a blank entity to parent our palette entities to, for editor organisation.
                 Entity paletteFolderEnt = ecb.CreateEntity();
                 ecb.SetName(paletteFolderEnt, "palette");
                 ecb.AddComponent<LocalToWorld>(paletteFolderEnt);
-                ecb.AddComponent<Parent>(paletteFolderEnt, new Parent { Value = blockEnt });
+                ecb.AddComponent(paletteFolderEnt, new Parent { Value = blockEnt });
 #endif
 
                 // Set up our palette data. One entity per prop.
@@ -123,7 +123,7 @@ public class BlockLoader : MonoBehaviour
                     ecb.SetName(propDataEnt, p.name);
 #if UNITY_EDITOR
                     ecb.AddComponent<LocalToWorld>(propDataEnt);
-                    ecb.AddComponent<Parent>(propDataEnt, new Parent { Value = paletteFolderEnt });
+                    ecb.AddComponent(propDataEnt, new Parent { Value = paletteFolderEnt });
 #endif
                     ecb.AddBuffer<Primitive>(propDataEnt).AddRange(new NativeArray<Primitive>(p.primitives, Allocator.Temp));
                     ecb.AppendToBuffer<PropPalette>(blockEnt, propDataEnt);
