@@ -10,19 +10,19 @@ using Unity.Burst;
 
 public partial struct PrimitiveSpawnSystem : ISystem
 {
-    [BurstCompile]
+    private EntityManager _entityManager;
+
     void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PrimitivePrefab>();
+        _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
 
-    [BurstCompile]
     void OnUpdate(ref SystemState state) 
     {
         state.Enabled = false;
 
         var primitiveBuffer = SystemAPI.GetSingletonBuffer<PrimitivePrefab>(true);
-        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
         EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
@@ -35,7 +35,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
                 ecb.AddComponent(propRoot, LocalTransform.FromPosition(datum.transform.position));
                 ecb.AddComponent(propRoot, new Parent { Value = root });
                 ecb.AddComponent(propRoot, new LocalToWorld { Value = float4x4.identity });
-                ecb.SetName(propRoot, entityManager.GetName(palette[datum.index]));
+                ecb.SetName(propRoot, _entityManager.GetName(palette[datum.index]));
 
                 var propBuffer = SystemAPI.GetBuffer<Primitive>(palette[datum.index]);
                 foreach (var primitive in propBuffer)
@@ -60,6 +60,6 @@ public partial struct PrimitiveSpawnSystem : ISystem
             }
         }
 
-        ecb.Playback(entityManager);
+        ecb.Playback(_entityManager);
     }
 }
