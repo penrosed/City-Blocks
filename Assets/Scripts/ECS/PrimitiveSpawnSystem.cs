@@ -42,7 +42,16 @@ public partial struct PrimitiveSpawnSystem : ISystem
                 {
                     var newPrim = ecb.Instantiate(primitiveBuffer[primitive.type]);
                     ecb.AddComponent(newPrim, new Parent { Value = propRoot });
-                    ecb.SetComponent(newPrim, LocalTransform.FromPosition(primitive.transform.position));
+
+                    quaternion primRotation = quaternion.identity;
+                    if (!primitive.transform.rotation.Equals(float3.zero))
+                    {
+                        Debug.Log(primitive.type);
+                        primRotation = math.mul(primRotation, quaternion.RotateX(math.radians(primitive.transform.rotation.x)));
+                        primRotation = math.mul(primRotation, quaternion.RotateY(math.radians(primitive.transform.rotation.y)));
+                        primRotation = math.mul(primRotation, quaternion.RotateZ(math.radians(primitive.transform.rotation.z)));
+                    }
+                    ecb.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
 
                     var colourQuery = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
                     var colourQueryMask = colourQuery.GetEntityQueryMask();
