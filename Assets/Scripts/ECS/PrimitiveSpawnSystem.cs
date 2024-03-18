@@ -3,8 +3,9 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
 using Unity.Rendering;
-using UnityEngine;
+using Unity.Burst;
 
+[BurstCompile]
 public partial struct PrimitiveSpawnSystem : ISystem
 {
     private EntityManager _entityManager;
@@ -15,6 +16,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
         _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
 
+    [BurstCompile]
     void OnUpdate(ref SystemState state) 
     {
         state.Enabled = false;
@@ -29,17 +31,11 @@ public partial struct PrimitiveSpawnSystem : ISystem
             foreach (var datum in layout)
             {
                 var propRoot = ecb.CreateEntity();
-                quaternion propRotation = quaternion.identity;
-                if (!datum.transform.rotation.Equals(float3.zero))
-                {
-                    propRotation = math.mul(propRotation, quaternion.RotateX(math.radians(datum.transform.rotation.x)));
-                    propRotation = math.mul(propRotation, quaternion.RotateY(math.radians(datum.transform.rotation.y)));
-                    propRotation = math.mul(propRotation, quaternion.RotateZ(math.radians(datum.transform.rotation.z)));
-                }
+                quaternion propRotation = Rotate(datum.transform.rotation);
                 ecb.AddComponent(propRoot, LocalTransform.FromPositionRotation(datum.transform.position, propRotation));
                 ecb.AddComponent(propRoot, new Parent { Value = root });
                 ecb.AddComponent(propRoot, new LocalToWorld { Value = float4x4.identity });
-                ecb.SetName(propRoot, _entityManager.GetName(palette[datum.index]));
+                /*ecb.SetName(propRoot, _entityManager.GetName(palette[datum.index]));*/
 
                 var propBuffer = SystemAPI.GetBuffer<Primitive>(palette[datum.index]);
                 foreach (var primitive in propBuffer)
@@ -47,13 +43,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
                     var newPrim = ecb.Instantiate(primitiveBuffer[primitive.type]);
                     ecb.SetComponent(newPrim, new Parent { Value = propRoot });
 
-                    quaternion primRotation = quaternion.identity;
-                    if (!primitive.transform.rotation.Equals(float3.zero))
-                    {
-                        primRotation = math.mul(primRotation, quaternion.RotateX(math.radians(primitive.transform.rotation.x)));
-                        primRotation = math.mul(primRotation, quaternion.RotateY(math.radians(primitive.transform.rotation.y)));
-                        primRotation = math.mul(primRotation, quaternion.RotateZ(math.radians(primitive.transform.rotation.z)));
-                    }
+                    quaternion primRotation = Rotate(primitive.transform.rotation);
                     ecb.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
 
                     ecb.SetComponent(newPrim, new PostTransformMatrix
@@ -78,5 +68,18 @@ public partial struct PrimitiveSpawnSystem : ISystem
         }
 
         ecb.Playback(_entityManager);
+    }
+
+    [BurstCompile]
+    readonly quaternion Rotate(float3 eulerAngles)
+    {
+        quaternion rotation = quaternion.identity;
+        if (!eulerAngles.Equals(float3.zero))
+        {
+            rotation = math.mul(rotation, quaternion.RotateX(math.radians(eulerAngles.x)));
+            rotation = math.mul(rotation, quaternion.RotateY(math.radians(eulerAngles.y)));
+            rotation = math.mul(rotation, quaternion.RotateZ(math.radians(eulerAngles.z)));
+        }
+        return rotation;
     }
 }

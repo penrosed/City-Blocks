@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+[BurstCompile]
 [WorldSystemFilter(WorldSystemFilterFlags.BakingSystem)]
 partial struct AddBuiltInsToPrimitivesBakingSystem : ISystem
 {

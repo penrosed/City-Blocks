@@ -4,6 +4,7 @@ using UnityEditor;
 using Unity.Entities;
 using Unity.Collections;
 using Unity.Transforms;
+using Unity.Burst;
 using System;
 
 [System.Serializable]
@@ -133,11 +134,13 @@ public struct PropPalette : IBufferElementData
 {
     public Entity propData;
 
+    [BurstCompile]
     public static implicit operator PropPalette(Entity propData)
     {
         return new PropPalette { propData = propData };
     }
 
+    [BurstCompile]
     public static implicit operator Entity(PropPalette element)
     {
         return element.propData;

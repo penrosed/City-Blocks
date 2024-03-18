@@ -8,19 +8,11 @@ using UnityEngine;
 // serialise transform data, I've had to write my own class.
 //
 [System.Serializable]
-[BurstCompile]
 public struct PrimitiveTransform
 {
     public float3 position;
     public float3 rotation;
     public float3 scale;
-
-    public static implicit operator bool(PrimitiveTransform transform)
-    {
-        return !(transform.position.Equals(float3.zero) &&
-                 transform.rotation.Equals(float3.zero) &&
-                 transform.rotation.Equals(float3.zero));
-    }
 }
 
 // A primitive shape (sphere, cube, etc). The kind of primitive
