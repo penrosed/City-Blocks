@@ -32,7 +32,14 @@ public partial struct PrimitiveSpawnSystem : ISystem
             foreach (var datum in layout)
             {
                 var propRoot = ecb.CreateEntity();
-                ecb.AddComponent(propRoot, LocalTransform.FromPosition(datum.transform.position));
+                quaternion propRotation = quaternion.identity;
+                if (!datum.transform.rotation.Equals(float3.zero))
+                {
+                    propRotation = math.mul(propRotation, quaternion.RotateX(math.radians(datum.transform.rotation.x)));
+                    propRotation = math.mul(propRotation, quaternion.RotateY(math.radians(datum.transform.rotation.y)));
+                    propRotation = math.mul(propRotation, quaternion.RotateZ(math.radians(datum.transform.rotation.z)));
+                }
+                ecb.AddComponent(propRoot, LocalTransform.FromPositionRotation(datum.transform.position, propRotation));
                 ecb.AddComponent(propRoot, new Parent { Value = root });
                 ecb.AddComponent(propRoot, new LocalToWorld { Value = float4x4.identity });
                 ecb.SetName(propRoot, _entityManager.GetName(palette[datum.index]));

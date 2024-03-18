@@ -55,31 +55,19 @@ public class BlockLoader : MonoBehaviour
         world = World.DefaultGameObjectInjectionWorld;
 
 #if UNITY_EDITOR
+        try
+        {
+            string _path = AssetDatabase.GetAssetPath(_JSONFile);
+            JSON = new TextAsset(new StreamReader(_path).ReadToEnd());
+            /*Debug.Log("\""+_JSONFile+"\" attached to Block Object in Inspector");*/
+        }
+        catch
+        {
+            Debug.LogWarning("Could not read JSON data from \"" + _JSONFile + "\"");
+        }
         CreateBlock(JSON, Vector3.zero);
 #endif
     }
-
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        // If '_JSONFile' is updated in the inspector, attempt
-        // to read its data and set the 'JSON' TextAsset.
-        if (_JSONFile != _JSONFile_OLD)
-        {
-            _JSONFile_OLD = _JSONFile;
-            try
-            {
-                string _path = AssetDatabase.GetAssetPath(_JSONFile);
-                JSON = new TextAsset(new StreamReader(_path).ReadToEnd());
-                /*Debug.Log("\""+_JSONFile+"\" attached to Block Object in Inspector");*/
-            }
-            catch
-            {
-                Debug.LogWarning("Could not read JSON data from \"" + _JSONFile + "\"");
-            }
-        }
-    }
-#endif
 
     public void CreateBlock(TextAsset blockJSON, Vector3 position)
     {
