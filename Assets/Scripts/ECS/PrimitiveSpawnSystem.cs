@@ -50,7 +50,6 @@ public partial struct PrimitiveSpawnSystem : ISystem
                     quaternion primRotation = quaternion.identity;
                     if (!primitive.transform.rotation.Equals(float3.zero))
                     {
-                        Debug.Log(primitive.type);
                         primRotation = math.mul(primRotation, quaternion.RotateX(math.radians(primitive.transform.rotation.x)));
                         primRotation = math.mul(primRotation, quaternion.RotateY(math.radians(primitive.transform.rotation.y)));
                         primRotation = math.mul(primRotation, quaternion.RotateZ(math.radians(primitive.transform.rotation.z)));
