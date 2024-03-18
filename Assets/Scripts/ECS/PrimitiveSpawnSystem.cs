@@ -53,6 +53,11 @@ public partial struct PrimitiveSpawnSystem : ISystem
                     }
                     ecb.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
 
+                    ecb.AddComponent(newPrim, new PostTransformMatrix
+                    {
+                        Value = float4x4.Scale(primitive.transform.scale.x, primitive.transform.scale.y, primitive.transform.scale.z)
+                    });
+
                     var colourQuery = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
                     var colourQueryMask = colourQuery.GetEntityQueryMask();
                     ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
