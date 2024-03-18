@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEditor;
 using Unity.Entities;
 using Unity.Collections;
-using System;
 using Unity.Transforms;
+using System;
 
 [System.Serializable]
 public struct PropInstance : IBufferElementData

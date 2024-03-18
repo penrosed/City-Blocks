@@ -2,8 +2,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
-using UnityEngine;
 using Unity.Rendering;
+using UnityEngine;
 
 public partial struct PrimitiveSpawnSystem : ISystem
 {
@@ -45,7 +45,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
                 foreach (var primitive in propBuffer)
                 {
                     var newPrim = ecb.Instantiate(primitiveBuffer[primitive.type]);
-                    ecb.AddComponent(newPrim, new Parent { Value = propRoot });
+                    ecb.SetComponent(newPrim, new Parent { Value = propRoot });
 
                     quaternion primRotation = quaternion.identity;
                     if (!primitive.transform.rotation.Equals(float3.zero))
@@ -57,7 +57,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
                     }
                     ecb.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
 
-                    ecb.AddComponent(newPrim, new PostTransformMatrix
+                    ecb.SetComponent(newPrim, new PostTransformMatrix
                     {
                         Value = float4x4.Scale(primitive.transform.scale.x, primitive.transform.scale.y, primitive.transform.scale.z)
                     });
