@@ -1,11 +1,7 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 // A simple transform class. Unity's built-in Transforms
 // are permanently tied to their objects. In order to

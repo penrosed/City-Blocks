@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.Collections;
 using UnityEngine;
 using Unity.Rendering;
-using Unity.Burst;
 
 public partial struct PrimitiveSpawnSystem : ISystem
 {
