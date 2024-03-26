@@ -8,52 +8,53 @@ using Unity.Burst;
 [BurstCompile]
 public partial struct PrimitiveSpawnSystem : ISystem
 {
-    private EntityManager _entityManager;
+    private EntityCommandBuffer _ecb;
+    private EntityArchetype _propRootArchetype;
 
     void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PrimitivePrefab>();
-        _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        _ecb = new EntityCommandBuffer(Allocator.Persistent);
+        _propRootArchetype = state.EntityManager.CreateArchetype(typeof(LocalTransform), typeof(Parent), typeof(LocalToWorld));
     }
 
     [BurstCompile]
-    void OnUpdate(ref SystemState state) 
+    void OnUpdate(ref SystemState state)
     {
         state.Enabled = false;
 
         var primitiveBuffer = SystemAPI.GetSingletonBuffer<PrimitivePrefab>(true);
-
-        EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (var (transform, palette, layout, root)
             in SystemAPI.Query<RefRW<LocalTransform>, DynamicBuffer<PropPalette>, DynamicBuffer<PropInstance>>().WithEntityAccess())
         {
             foreach (var datum in layout)
             {
-                var propRoot = ecb.CreateEntity();
+                var propRoot = state.EntityManager.CreateEntity(_propRootArchetype);
+
                 quaternion propRotation = Rotate(datum.transform.rotation);
-                ecb.AddComponent(propRoot, LocalTransform.FromPositionRotation(datum.transform.position, propRotation));
-                ecb.AddComponent(propRoot, new Parent { Value = root });
-                ecb.AddComponent(propRoot, new LocalToWorld { Value = float4x4.identity });
+                SystemAPI.SetComponent(propRoot, LocalTransform.FromPositionRotation(datum.transform.position, propRotation));
+                SystemAPI.SetComponent(propRoot, new Parent { Value = root });
+                SystemAPI.SetComponent(propRoot, new LocalToWorld { Value = float4x4.identity });
                 /*ecb.SetName(propRoot, _entityManager.GetName(palette[datum.index]));*/
 
                 var propBuffer = SystemAPI.GetBuffer<Primitive>(palette[datum.index]);
                 foreach (var primitive in propBuffer)
                 {
-                    var newPrim = ecb.Instantiate(primitiveBuffer[primitive.type]);
-                    ecb.SetComponent(newPrim, new Parent { Value = propRoot });
+                    var newPrim = state.EntityManager.Instantiate(primitiveBuffer[primitive.type]);
+                    SystemAPI.SetComponent(newPrim, new Parent { Value = propRoot });
 
                     quaternion primRotation = Rotate(primitive.transform.rotation);
-                    ecb.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
+                    SystemAPI.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
 
-                    ecb.SetComponent(newPrim, new PostTransformMatrix
+                    SystemAPI.SetComponent(newPrim, new PostTransformMatrix
                     {
                         Value = float4x4.Scale(primitive.transform.scale.x, primitive.transform.scale.y, primitive.transform.scale.z)
                     });
 
                     var colourQuery = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
                     var colourQueryMask = colourQuery.GetEntityQueryMask();
-                    ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
+                    _ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
                     {
                         Value = new float4
                         {
@@ -67,7 +68,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
             }
         }
 
-        ecb.Playback(_entityManager);
+        _ecb.Playback(state.EntityManager);
     }
 
     [BurstCompile]
