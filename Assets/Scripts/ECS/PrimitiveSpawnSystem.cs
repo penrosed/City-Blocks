@@ -8,22 +8,20 @@ using Unity.Burst;
 [BurstCompile]
 public partial struct PrimitiveSpawnSystem : ISystem
 {
-    private EntityCommandBuffer _ecb;
     private EntityArchetype _propRootArchetype;
 
     void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PrimitivePrefab>();
-        _ecb = new EntityCommandBuffer(Allocator.Persistent);
         _propRootArchetype = state.EntityManager.CreateArchetype(typeof(LocalTransform), typeof(Parent), typeof(LocalToWorld));
     }
 
     [BurstCompile]
     void OnUpdate(ref SystemState state)
     {
-        state.Enabled = false;
-
         var primitiveBuffer = SystemAPI.GetSingletonBuffer<PrimitivePrefab>(true);
+
+        var ecb = new EntityCommandBuffer(Allocator.TempJob);
 
         foreach (var (transform, palette, layout, root)
             in SystemAPI.Query<RefRW<LocalTransform>, DynamicBuffer<PropPalette>, DynamicBuffer<PropInstance>>().WithEntityAccess())
@@ -56,7 +54,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
 
                     var colourQuery = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
                     var colourQueryMask = colourQuery.GetEntityQueryMask();
-                    _ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
+                    ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
                     {
                         Value = new float4
                         {
@@ -68,8 +66,9 @@ public partial struct PrimitiveSpawnSystem : ISystem
                     });
                 }
             }
+            SystemAPI.SetBufferEnabled<PropInstance>(root, false);
         }
-        _ecb.Playback(state.EntityManager);
+        ecb.Playback(state.EntityManager);
     }
 
     [BurstCompile]

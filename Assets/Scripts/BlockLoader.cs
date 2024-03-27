@@ -8,7 +8,7 @@ using Unity.Burst;
 using System;
 
 [System.Serializable]
-public struct PropInstance : IBufferElementData
+public struct PropInstance : IBufferElementData, IEnableableComponent
 {
     // The palette index of the prop we want to instanciate.
     public int index;
@@ -64,9 +64,18 @@ public class BlockLoader : MonoBehaviour
         {
             Debug.LogWarning("Could not read JSON data from \"" + _JSONFile + "\"");
         }
-        CreateBlock(JSON, Vector3.zero);
 #endif
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown("space"))
+        {
+            CreateBlock(JSON, new Vector3(UnityEngine.Random.Range(-5.0f, 5.0f), 0, UnityEngine.Random.Range(-5.0f, 5.0f)));
+        }
+    }
+#endif
 
     public void CreateBlock(TextAsset blockJSON, Vector3 position)
     {
