@@ -32,7 +32,8 @@ public partial struct PrimitiveSpawnSystem : ISystem
             {
                 var propRoot = state.EntityManager.CreateEntity(_propRootArchetype);
 
-                quaternion propRotation = Rotate(datum.transform.rotation);
+                quaternion propRotation = quaternion.identity;
+                Rotate(ref propRotation, datum.transform.rotation);
                 SystemAPI.SetComponent(propRoot, LocalTransform.FromPositionRotation(datum.transform.position, propRotation));
                 SystemAPI.SetComponent(propRoot, new Parent { Value = root });
                 SystemAPI.SetComponent(propRoot, new LocalToWorld { Value = float4x4.identity });
@@ -44,7 +45,8 @@ public partial struct PrimitiveSpawnSystem : ISystem
                     var newPrim = state.EntityManager.Instantiate(primitiveBuffer[primitive.type]);
                     SystemAPI.SetComponent(newPrim, new Parent { Value = propRoot });
 
-                    quaternion primRotation = Rotate(primitive.transform.rotation);
+                    quaternion primRotation = quaternion.identity;
+                    Rotate(ref primRotation, primitive.transform.rotation);
                     SystemAPI.SetComponent(newPrim, LocalTransform.FromPositionRotation(primitive.transform.position, primRotation));
 
                     SystemAPI.SetComponent(newPrim, new PostTransformMatrix
@@ -67,20 +69,18 @@ public partial struct PrimitiveSpawnSystem : ISystem
                 }
             }
         }
-
         _ecb.Playback(state.EntityManager);
     }
 
     [BurstCompile]
-    readonly quaternion Rotate(float3 eulerAngles)
+    static ref quaternion Rotate(ref quaternion quatToRotate, in float3 eulerAngles)
     {
-        quaternion rotation = quaternion.identity;
         if (!eulerAngles.Equals(float3.zero))
         {
-            rotation = math.mul(rotation, quaternion.RotateX(math.radians(eulerAngles.x)));
-            rotation = math.mul(rotation, quaternion.RotateY(math.radians(eulerAngles.y)));
-            rotation = math.mul(rotation, quaternion.RotateZ(math.radians(eulerAngles.z)));
+            quatToRotate = math.mul(quatToRotate, quaternion.RotateX(math.radians(eulerAngles.x)));
+            quatToRotate = math.mul(quatToRotate, quaternion.RotateY(math.radians(eulerAngles.y)));
+            quatToRotate = math.mul(quatToRotate, quaternion.RotateZ(math.radians(eulerAngles.z)));
         }
-        return rotation;
+        return ref quatToRotate;
     }
 }
