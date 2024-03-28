@@ -52,18 +52,21 @@ public partial struct PrimitiveSpawnSystem : ISystem
                         Value = float4x4.Scale(primitive.transform.scale.x, primitive.transform.scale.y, primitive.transform.scale.z)
                     });
 
-                    var colourQuery = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
-                    var colourQueryMask = colourQuery.GetEntityQueryMask();
-                    ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
+                    if (SystemAPI.HasComponent<MeshLODGroupComponent>(newPrim))
                     {
-                        Value = new float4
+                        var colourQuery = SystemAPI.QueryBuilder().WithAll<URPMaterialPropertyBaseColor>().Build();
+                        var colourQueryMask = colourQuery.GetEntityQueryMask();
+                        ecb.SetComponentForLinkedEntityGroup(newPrim, colourQueryMask, new URPMaterialPropertyBaseColor
                         {
-                            x = primitive.colour.r,
-                            y = primitive.colour.g,
-                            z = primitive.colour.b,
-                            w = primitive.colour.a
-                        }
-                    });
+                            Value = new float4
+                            {
+                                x = primitive.colour.r,
+                                y = primitive.colour.g,
+                                z = primitive.colour.b,
+                                w = primitive.colour.a
+                            }
+                        });
+                    }
                 }
             }
             SystemAPI.SetBufferEnabled<PropInstance>(root, false);
