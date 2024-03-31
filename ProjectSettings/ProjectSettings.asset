@@ -738,7 +738,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: ENABLE_UNITY_OCCLUSION
+    Standalone: ENABLE_UNITY_OCCLUSION;ENABLE_MESH_RENDERER_SUBMESH_DATA_SHARING
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
