@@ -15,10 +15,11 @@ partial struct AddBuiltInsToPrimitivesBakingSystem : ISystem
         state.EntityManager.AddComponent<PostTransformMatrix>(queryPrimitiveTag);
         state.EntityManager.AddComponent<Parent>(queryPrimitiveTag);
 
-        
-        foreach (var entity in queryPrimitiveTag.ToEntityArray(Allocator.Temp))
+        var entityList = queryPrimitiveTag.ToEntityArray(Allocator.Temp);
+        foreach (var entity in entityList)
         {
             state.EntityManager.SetComponentData(entity, new PostTransformMatrix { Value = float4x4.identity });
         }
+        entityList.Dispose();
     }
 }

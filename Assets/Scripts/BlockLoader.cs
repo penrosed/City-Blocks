@@ -121,12 +121,19 @@ public class BlockLoader : MonoBehaviour
                     ecb.AddComponent<LocalToWorld>(propDataEnt);
                     ecb.AddComponent(propDataEnt, new Parent { Value = paletteFolderEnt });
 #endif
-                    ecb.AddBuffer<Primitive>(propDataEnt).AddRange(new NativeArray<Primitive>(p.primitives, Allocator.Temp));
+                    // Add our prop data to the prop data entity
+                    var nativePropData = new NativeArray<Primitive>(p.primitives, Allocator.Temp);
+                    ecb.AddBuffer<Primitive>(propDataEnt).AddRange(nativePropData);
+                    nativePropData.Dispose();
+
+                    // Give our block entity a reference to our prop data entity.
                     ecb.AppendToBuffer<PropPalette>(blockEnt, propDataEnt);
                 }
 
                 // Set up our layout buffer.
-                ecb.AddBuffer<PropInstance>(blockEnt).AddRange(new NativeArray<PropInstance>(block.layout, Allocator.Temp));
+                var nativeLayoutData = new NativeArray<PropInstance>(block.layout, Allocator.Temp);
+                ecb.AddBuffer<PropInstance>(blockEnt).AddRange(nativeLayoutData);
+                nativeLayoutData.Dispose();
 
                 // Play back our EM commands.
                 ecb.Playback(world.EntityManager);
