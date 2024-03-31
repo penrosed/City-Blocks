@@ -21,7 +21,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
     {
         var primitiveBuffer = SystemAPI.GetSingletonBuffer<PrimitivePrefab>(true);
 
-        var ecb = new EntityCommandBuffer(Allocator.TempJob);
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (var (transform, palette, layout, root)
             in SystemAPI.Query<RefRW<LocalTransform>, DynamicBuffer<PropPalette>, DynamicBuffer<PropInstance>>().WithEntityAccess())
@@ -72,6 +72,7 @@ public partial struct PrimitiveSpawnSystem : ISystem
             SystemAPI.SetBufferEnabled<PropInstance>(root, false);
         }
         ecb.Playback(state.EntityManager);
+        ecb.Dispose();
     }
 
     [BurstCompile]

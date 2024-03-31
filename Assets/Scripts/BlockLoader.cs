@@ -130,6 +130,7 @@ public class BlockLoader : MonoBehaviour
 
                 // Play back our EM commands.
                 ecb.Playback(world.EntityManager);
+                ecb.Dispose();
             }
         }   
         catch (Exception e)
