@@ -46,12 +46,16 @@ public class BlockLoader : MonoBehaviour
     private TextAsset JSON;
 #endif
 
-    private World world;
+    private World _world;
     public Block block;
+    private EntityArchetype _blockArchetype;
+    private EntityArchetype _propDataArchetype;
 
     private void Awake()
     {
-        world = World.DefaultGameObjectInjectionWorld;
+        _world = World.DefaultGameObjectInjectionWorld;
+        _blockArchetype = _world.EntityManager.CreateArchetype(typeof(LocalTransform), typeof(LocalToWorld), typeof(PropPalette));
+        _propDataArchetype = _world.EntityManager.CreateArchetype(typeof(LocalToWorld), typeof(Parent));
 
 #if UNITY_EDITOR
         try
@@ -87,22 +91,21 @@ public class BlockLoader : MonoBehaviour
             // Populate a Block struct from our JSON!
             block = JsonUtility.FromJson<Block>(blockJSON.text);
 
-            if (world.IsCreated)
+            if (_world.IsCreated)
             {
                 // Create our EntityCommandBuffer to queue up our EntityManager commands.
                 EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
                 // Set up our block Entity.
-                Entity blockEnt = ecb.CreateEntity();
-                ecb.AddComponent(blockEnt, new LocalTransform
+                Entity blockEnt = ecb.CreateEntity(_blockArchetype);
+                ecb.SetComponent(blockEnt, new LocalTransform
                 {
                     Position = position,
                     Scale = 1f,
                     Rotation = Unity.Mathematics.quaternion.identity,
                 });
-                ecb.AddComponent(blockEnt, new LocalToWorld { Value = Unity.Mathematics.float4x4.identity });
+                ecb.SetComponent(blockEnt, new LocalToWorld { Value = Unity.Mathematics.float4x4.identity });
                 ecb.SetName(blockEnt, block.name);
-                ecb.AddBuffer<PropPalette>(blockEnt);
 
 #if UNITY_EDITOR
                 // Create a blank entity to parent our palette entities to, for editor organisation.
@@ -115,11 +118,10 @@ public class BlockLoader : MonoBehaviour
                 // Set up our palette data. One entity per prop.
                 foreach (Prop p in block.palette)
                 {
-                    Entity propDataEnt = ecb.CreateEntity();
+                    Entity propDataEnt = ecb.CreateEntity(_propDataArchetype);
                     ecb.SetName(propDataEnt, p.name);
 #if UNITY_EDITOR
-                    ecb.AddComponent<LocalToWorld>(propDataEnt);
-                    ecb.AddComponent(propDataEnt, new Parent { Value = paletteFolderEnt });
+                    ecb.SetComponent(propDataEnt, new Parent { Value = paletteFolderEnt });
 #endif
                     // Add our prop data to the prop data entity
                     var nativePropData = new NativeArray<Primitive>(p.primitives, Allocator.Temp);
@@ -136,10 +138,10 @@ public class BlockLoader : MonoBehaviour
                 nativeLayoutData.Dispose();
 
                 // Play back our EM commands.
-                ecb.Playback(world.EntityManager);
+                ecb.Playback(_world.EntityManager);
                 ecb.Dispose();
             }
-        }   
+        }
         catch (Exception e)
         {
             Debug.LogError("Encountered an error while loading block:\n" + e);
