@@ -1,24 +1,26 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PrimitiveLookup : MonoBehaviour
 {
     [System.Serializable]
-    public struct PrimPrefab
+    public struct NamedMesh
     {
-        public Object prefab;
+        public string Name;
+        public Object Object;
     };
 
     [SerializeField]
-    private List<PrimPrefab> primitiveLookup;
-    public static List<Object> primitives;
+    private List<NamedMesh> primitiveLookup;
+    public static Dictionary<string, Object> primitives;
 
     private void Awake()
     {
-        primitives = new List<Object>();
-        foreach (PrimPrefab p in primitiveLookup)
+        primitives = new Dictionary<string, Object>();
+        foreach(NamedMesh p in primitiveLookup)
         {
-            primitives.Add(p.prefab);
+            primitives.Add(p.Name, p.Object);
         }
     }
 }
