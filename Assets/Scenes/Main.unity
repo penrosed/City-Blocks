@@ -104,7 +104,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +117,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -160,13 +160,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 676703713}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -254,13 +254,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -302,9 +302,17 @@ Camera:
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -338,13 +346,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1275097597
 GameObject:
@@ -376,6 +384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _JSONFile: {fileID: 102900000, guid: 2e6c20638ff23b945a49b8a45d0c63d2, type: 3}
+  newBlockPos: {x: 0, y: 0, z: -7.5}
   block:
     name: 
     palette: []
@@ -387,49 +396,67 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1275097597}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!49 &1708978733
-TextAsset:
+--- !u!1 &1281935623
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1281935625}
+  - component: {fileID: 1281935624}
+  m_Layer: 0
+  m_Name: Entities
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1281935624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281935623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
   m_Name: 
-  m_Script: "{\r\n  \"title\": \"Caf\xE9\",\r\n  \"creator\": \"Daniel Penrose\",\r\n 
-    \"palette\": [\r\n    {\r\n      \"name\": \"Fence\",\r\n      \"primitives\":
-    [\r\n        {\r\n          \"type\": \"Sphere\",\r\n          \"colour\": {\r\n           
-    \"r\": 0.4056604,\r\n            \"g\": 0.1781202,\r\n            \"b\": 0.07807048,\r\n           
-    \"a\": 1.0\r\n          },\r\n          \"transform\": {\r\n            \"position\":
-    {\r\n              \"x\": 0.0,\r\n              \"y\": 0.0,\r\n             
-    \"z\": 0.0\r\n            },\r\n            \"rotation\": {\r\n             
-    \"x\": 0.0,\r\n              \"y\": 0.0,\r\n              \"z\": 0.0\r\n           
-    },\r\n            \"scale\": {\r\n              \"x\": 1.0,\r\n             
-    \"y\": 1.0,\r\n              \"z\": 1.0\r\n            }\r\n          }\r\n       
-    },\r\n        {\r\n          \"type\": \"Cube\",\r\n          \"transform\":
-    {\r\n            \"position\": {\r\n              \"x\": 0,\r\n             
-    \"y\": 0.5,\r\n              \"z\": 0\r\n            },\r\n            \"rotation\":
-    {\r\n              \"x\": 0,\r\n              \"y\": 45,\r\n              \"z\":
-    0\r\n            },\r\n            \"scale\": {\r\n              \"x\": 1,\r\n             
-    \"y\": 1,\r\n              \"z\": 1\r\n            }\r\n          }\r\n       
-    },\r\n        {\r\n          \"type\": \"Subtract\"\r\n        }\r\n      ]\r\n   
-    }\r\n  ],\r\n  \"layout\": [\r\n    {\r\n      \"index\": 0,\r\n      \"transform\":
-    {\r\n        \"position\": {\r\n          \"x\": 0.0,\r\n          \"y\": 2.0,\r\n         
-    \"z\": 0.0\r\n        },\r\n        \"rotation\": {\r\n          \"x\": 0.0,\r\n         
-    \"y\": 0.0,\r\n          \"z\": 0.0\r\n        },\r\n        \"scale\": {\r\n         
-    \"x\": 1.0,\r\n          \"y\": 1.0,\r\n          \"z\": 1.0\r\n        }\r\n     
-    }\r\n    },\r\n    {\r\n      \"index\": 0,\r\n      \"transform\": {\r\n       
-    \"position\": {\r\n          \"x\": 2.0,\r\n          \"y\": 2.0,\r\n         
-    \"z\": 0.0\r\n        },\r\n        \"rotation\": {\r\n          \"x\": 0.0,\r\n         
-    \"y\": 0.0,\r\n          \"z\": 0.0\r\n        },\r\n        \"scale\": {\r\n         
-    \"x\": 1.0,\r\n          \"y\": 1.0,\r\n          \"z\": 1.0\r\n        }\r\n     
-    }\r\n    }\r\n  ]\r\n}"
+  m_EditorClassIdentifier: 
+  _SceneAsset: {fileID: 102900000, guid: e16f4af56aa346c46abe224b8a833a6a, type: 3}
+  _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  AutoLoadScene: 1
+  _SceneGUID:
+    Value:
+      x: 1604646430
+      y: 1281637030
+      z: 3022187430
+      w: 2795714728
+--- !u!4 &1281935625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281935623}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1773346702
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,11 +501,21 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773346702}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 963194228}
+  - {fileID: 705507995}
+  - {fileID: 676703715}
+  - {fileID: 1275097599}
+  - {fileID: 1773346704}
+  - {fileID: 1281935625}
