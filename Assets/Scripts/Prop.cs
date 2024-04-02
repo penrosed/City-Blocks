@@ -56,7 +56,7 @@ public struct Primitive : IBufferElementData, IEquatable<Primitive>
     //   - Add some way of changing the texture / base colour of the
     //     primitive.
     //     
-    public string type;
+    public int type;
     public Color colour;
     public PrimitiveTransform transform;
 
