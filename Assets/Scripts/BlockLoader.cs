@@ -44,6 +44,7 @@ public class BlockLoader : MonoBehaviour
     [SerializeField] private UnityEngine.Object _JSONFile;
     private UnityEngine.Object _JSONFile_OLD;
     private TextAsset JSON;
+    public Vector3 newBlockPos = new Vector3(0, 0, -9f);
 #endif
 
     private World _world;
@@ -76,7 +77,8 @@ public class BlockLoader : MonoBehaviour
     {
         if (Input.GetKeyDown("space"))
         {
-            CreateBlock(JSON, new Vector3(UnityEngine.Random.Range(-5.0f, 5.0f), 0, UnityEngine.Random.Range(-5.0f, 5.0f)));
+            CreateBlock(JSON, newBlockPos);
+            newBlockPos += new Vector3(6f, 0f);
         }
     }
 #endif

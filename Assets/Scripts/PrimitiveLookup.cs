@@ -13,7 +13,7 @@ public class PrimitiveLookup : MonoBehaviour
     private List<PrimPrefab> primitiveLookup;
     public static List<Object> primitives;
 
-    private void Awake()
+    private void OnValidate()
     {
         primitives = new List<Object>();
         foreach (PrimPrefab p in primitiveLookup)
