@@ -12,11 +12,10 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        // x - right    pitch
-        // y - up       yaw
-        // z - forward  roll
         yaw = transform.eulerAngles.y;
         pitch = transform.eulerAngles.x;
+
+        Cursor.visible = false;
     }
 
     void Update()
